@@ -1,0 +1,47 @@
+﻿<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+
+@{
+     Layout="/Shared/_LayoutMain.cshtml";
+
+     Session["un"]="0";
+     WebSecurity.Logout();
+     
+}
+
+
+@{
+var username = "";
+var password = "";
+if(IsPost)
+    {
+    username = Request["username"];
+   password = Request["password"];
+   
+   
+       if( username!=""&&password!=""&&WebSecurity.Login(username, password))
+        {
+            Session["pwd"]=password;
+        Response.Redirect("~/Admn_main.cshtml");
+        }
+        else{
+            
+          <text>Invalid User Name Or Password </text>
+
+        }
+
+    }
+}
+<form id="contact-form" method="post" enctype="multipart/form-data">
+    <div  style="margin-left: 300px"> 
+    <fieldset>
+        <label><span class="text-form">User Name :</span><input name="username" type="text" /></label>
+        <label><span class="text-form">Password :</span><input name="password" type="password" /></label>
+       
+        <button type="submit" class="button">Login</button>
+         
+       
+    </fieldset>
+         </div>
+</form>

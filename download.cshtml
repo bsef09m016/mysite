@@ -1,0 +1,75 @@
+﻿@{ 
+    Layout="/Shared/_LayoutMain.cshtml";
+   
+ 
+  
+ 
+
+}
+
+@using Microsoft.Web.Helpers;
+   
+
+
+@{
+
+List<proddata>car=(List<proddata>)Session["database"];
+if(car!=null&&car.Count>0){
+    for(int i=0;i<car.Count;i++){
+        string str=car[i].thumb;
+str=str.Replace(@"\",@"/");
+str=str.Substring(2);
+
+var srvp1=Server.MapPath(car[i].prod);
+
+var sm="Remove.cshtml?keyc="+i.ToString();
+<div class="ic"></div>
+					<div class="container_12">
+						<div class="wrapper indent-bot">
+							<article class="grid_12">
+								<div class="box">
+									<div class="padding">
+										<div class="wrapper">
+											<figure class="img-indent2"><img src= @str alt="_" /></figure>
+											<div class="extra-wrap">
+
+												 <table>
+                                                 <tr>
+                                                 <td><h6 class="p1">Name</h6></td><td><h6 class="p1">@car[i].name</h6></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td><h6 class="p1">Version</h6></td><td><h6 class="p1">@car[i].version</h6></td>
+                                                 </tr>
+                                                    <tr>
+                                                 <td><h6 class="p1">Price</h6></td><td><h6 class="p1">@car[i].price</h6></td>
+                                                 </tr>
+
+                                                 </table>
+                                                 
+												<div class="aligncenter">
+                                                
+                                                  
+                                                   
+                                                        
+													 <a class="button" href=@car[i].prod target="_blank" >Download</a>
+												
+                                                
+                                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</article>
+						</div>
+</div>
+}
+}
+else{
+    
+    //no item message
+
+
+
+}
+
+}

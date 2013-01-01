@@ -1,0 +1,14 @@
+﻿
+@using PayPal;
+@{
+  WebSecurity.InitializeDatabaseConnection("onlinesoft",
+"UserProfile", "UserId", "UserName", true);
+
+PayPal.Profile.Initialize("bsef09_1356955487_biz_api1.gmail.com","1356955509","AFcWxV21C7fd0v3bYYYRCpSSRl31A4UzvEvlQoHXls1qTYCiJZLYPG-h","sandbox");
+ 
+ PayPal.Profile.Language = "en_US"; 
+    PayPal.Profile.CancelUrl = "http://www.mystore.com/ohtoobad.cshtml"; 
+    PayPal.Profile.ReturnUrl = "http://www.mystore.com/thanks.cshtml"; 
+    PayPal.Profile.IpnUrl = "http://www.mystore.com/notifications.cshtml"; 
+    PayPal.Profile.CurrencyCode = "USD";         
+}

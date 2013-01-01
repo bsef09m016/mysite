@@ -1,0 +1,96 @@
+﻿@{ 
+    Layout="/Shared/_LayoutMain.cshtml";
+
+ try{ 
+    if(WebSecurity.Login(WebSecurity.CurrentUserName,(string)Session["pwd"]))
+{
+    
+}
+    }
+    catch{
+        Response.Redirect("~/default");
+        }
+
+}
+
+
+@{
+    
+
+try{     
+         
+    var v= Int32.Parse(Request["keyc"]);
+    List<proddata>car1=(List<proddata>)Session["database"];
+    
+    Session["cart"]=new List<proddata>();
+    Session["cart"]=car1;
+    proddata temp=car1.ElementAt(v);
+
+    Session["edit"]=temp;
+    Response.Redirect("~/edititem");
+       
+   }
+   catch{}
+ 
+
+}
+
+@{
+
+List<proddata>car=(List<proddata>)Session["database"];
+if(car!=null&&car.Count>0){
+    for(int i=0;i<car.Count;i++){
+        string str=car[i].thumb;
+str=str.Replace(@"\",@"/");
+str=str.Substring(2);
+
+var sm="edit.cshtml?keyc="+i.ToString();
+<div class="ic"></div>
+					<div class="container_12">
+						<div class="wrapper indent-bot">
+							<article class="grid_12">
+								<div class="box">
+									<div class="padding">
+										<div class="wrapper">
+											<figure class="img-indent2"><img src= @str alt="_" /></figure>
+											<div class="extra-wrap">
+
+												 <table>
+                                                 <tr>
+                                                 <td><h6 class="p1">Name</h6></td><td><h6 class="p1">@car[i].name</h6></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td><h6 class="p1">Version</h6></td><td><h6 class="p1">@car[i].version</h6></td>
+                                                 </tr>
+                                                    <tr>
+                                                 <td><h6 class="p1">Price</h6></td><td><h6 class="p1">@car[i].price</h6></td>
+                                                 </tr>
+
+                                                 </table>
+                                                 
+												<div class="aligncenter">
+                                                
+                                                    <form id="contact-form1" method="post" enctype="multipart/form-data">
+                                                   
+													 <a class="button" href=@sm onclick="document.getElementById('contact-form1').submit()">Edit</a>
+												</form>
+                                                
+                                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</article>
+						</div>
+</div>
+}
+}
+else{
+    
+    //no item message
+
+
+
+}
+
+}

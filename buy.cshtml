@@ -1,0 +1,74 @@
+﻿@{ 
+    Layout="/Shared/_LayoutMain.cshtml";
+}
+
+@{ 
+  
+   var b=PayPal.ButtonManager.BuyNowButton.Create((string)Session["eml"],(string)Session["p"],(String)Session["rup"]);
+   HtmlString payPalButtonHtml = new HtmlString(b.WebSiteCode);
+}
+
+@{
+
+
+List<proddata>car=(List<proddata>)Session["buy"];
+if(car!=null&&car.Count>0){
+    for(int i=0;i<car.Count;i++){
+        string str=car[i].thumb;
+str=str.Replace(@"\",@"/");
+str=str.Substring(2);
+
+var sm="cart.cshtml?keyc="+i.ToString();
+var sm2="cart.cshtml?keyb="+i.ToString();
+<div class="ic"></div>
+					<div class="container_12">
+						<div class="wrapper indent-bot">
+							<article class="grid_12">
+								<div class="box">
+									<div class="padding">
+										<div class="wrapper">
+											<figure class="img-indent2"><img src= @str alt="_" /></figure>
+											<div class="extra-wrap">
+
+												 <table>
+                                                 <tr>
+                                                 <td><h6 class="p1">Name</h6></td><td><h6 class="p1">@car[i].name</h6></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td><h6 class="p1">Version</h6></td><td><h6 class="p1">@car[i].version</h6></td>
+                                                 </tr>
+                                                    <tr>
+                                                 <td><h6 class="p1">Price</h6></td><td><h6 class="p1">@car[i].price</h6></td>
+                                                 </tr>
+
+                                                 </table>
+                                                 
+												<div class="aligncenter">
+                                                
+                                                   
+                                                   
+													
+                                                    
+												
+                                                
+                                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</article>
+						</div>
+</div>
+
+}
+ @payPalButtonHtml
+}
+else{
+    
+    //no item message
+
+
+
+}
+
+}

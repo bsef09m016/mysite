@@ -1,0 +1,173 @@
+﻿<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+@using Microsoft.Web.Helpers;
+
+
+
+
+
+@{
+
+    
+     Layout="/Shared/_LayoutMain.cshtml";
+
+ try{ 
+    if(WebSecurity.Login(WebSecurity.CurrentUserName,(string)Session["pwd"]))
+{
+    
+}
+    }
+    catch{
+        Response.Redirect("~/default");
+        }
+   
+}
+
+
+@{
+    
+WebImage photo = null;
+var newFileName = "";
+var imagePath = "";
+var imageThumbPath  = "";
+
+ if(IsPost)
+ {
+     
+
+     
+     var name= Request["p1"];
+     var vers=Request["p2"];
+     var dec=Request["p3"];
+     var price=Request["p4"];
+     
+     var srvp1=Server.MapPath("");
+     var srvp2=Server.MapPath("");
+     
+     
+     
+     if(Session["file1"]!=null&&Session["file2"]!=null&&Session["file3"]!=null)
+     {
+         if(name.IsEmpty())
+         {
+             ModelState.AddError("name","---> Name Can't Be Emplty");
+         }
+         if(vers.IsEmpty())
+         {
+             ModelState.AddError("version","---> Version Can't Be Emplty");
+         }
+          if(dec.IsEmpty())
+         {
+             ModelState.AddError("Description","---> Description Can't Be Emplty");
+         }
+          if(price.IsEmpty())
+         {
+             ModelState.AddError("Price","---> Price Can't Be Emplty\n\n\n");
+         }
+
+     }
+     
+     photo = WebImage.GetImageFromRequest();
+      if(photo != null){
+           
+             newFileName = Path.GetFileName(photo.FileName);
+             imagePath = @"Uploadimages\" + newFileName;
+             var pht=photo;
+             pht.Resize(height:267,width:425, preserveAspectRatio: true,
+            preventEnlarge: false);
+             pht.Save(@"~\" + imagePath);
+             Session["file2"]=@"~\" + imagePath;
+
+            imageThumbPath = @"imgThumb\" + newFileName;
+            photo.Resize(height:191,width: 285, preserveAspectRatio: true,
+            preventEnlarge: true);
+            photo.Save(@"~\" + imageThumbPath);        
+            
+             Session["file3"]=@"~\" + imageThumbPath;;
+
+            }
+     //if(Session["file1"]==""||Session["file2"]==""){
+         try{
+     var uploadedFile1 = Request.Files[0];
+     var  fileName1 = uploadedFile1.FileName;
+     srvp1=Server.MapPath("~/Uploadsofts/" +fileName1);
+     Session["file1"]= @"~/Uploadsofts/" +fileName1;
+      uploadedFile1.SaveAs(srvp1);
+     
+     }
+     catch{}
+
+     
+       if(name!=null&&name.Length>0){
+     
+        proddata data=new proddata();  
+       
+       data.name= name;
+       data.price=price;
+       data.descrip= dec;
+       data.version=vers;
+       data.prod =Session["file1"].ToString();
+       data.img= Session["file2"].ToString();
+       data.thumb=Session["file3"].ToString();
+
+       if(DataBase.adddata(data)){
+        Response.Redirect("~/Admn_main"); 
+        }
+        }
+         
+  
+
+        
+
+ }
+
+}
+
+ <div style="color: #f00; margin-left: 300px">
+                 @if(ModelState.Count>0){
+                  @Html.ValidationSummary("Please correct the following errors:") 
+}
+           </div>
+
+<p> UpLoad Software </p>
+ @FileUpload.GetHtml("Software",1,false,true,"Upload")
+
+<form action="" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <br>
+      <p> UpLoad Image </p>
+      <input type="file" name="Image" />
+      <br/>
+        
+      <input type="submit" value="Submit" />
+    </fieldset>
+  </form>
+
+<br><br><br>
+<form id="contact-form" method="post" enctype="multipart/form-data">
+    
+    <fieldset>
+       
+        <label><span class="text-form">Name:</span><input name="p1" type="text" /></label>
+        <label><span class="text-form">Version:</span><input name="p2" type="text" /></label>
+       <label><span class="text-form">Price:</span><input name="p4" type="text" /></label>
+        <div class="wrapper">
+            <div class="text-form">Description:</div>
+            <div class="extra-wrap">
+                <textarea name="p3"></textarea>
+                <div class="clear"></div>
+                <div >
+                    <br>
+                    <a class="button" href="#" onclick="document.getElementById('contact-form').reset()">Clear</a>
+                    <a class="button" href="#" onclick="document.getElementById('contact-form').submit()">Add</a>
+                </div>
+                
+            </div>
+        </div>
+       
+    </fieldset>
+        
+</form>
+
+

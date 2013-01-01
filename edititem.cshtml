@@ -1,0 +1,159 @@
+﻿<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+@using Microsoft.Web.Helpers;
+
+
+@{
+     Layout="/Shared/_LayoutMain.cshtml";
+ try{ 
+    if(WebSecurity.Login(WebSecurity.CurrentUserName,(string)Session["pwd"]))
+{
+    
+}
+    }
+    catch{
+        Response.Redirect("~/default");
+        }
+}
+
+
+@{
+    
+WebImage photo = null;
+var newFileName = "";
+var imagePath = "";
+var imageThumbPath  = "";
+
+proddata tem= (proddata) Session["edit"];
+
+ if(IsPost)
+ {
+     
+
+     
+     var name= Request["p1"];
+     var vers=Request["p2"];
+     var dec=Request["p3"];
+     var price=Request["p4"];
+     
+     var srvp1=Server.MapPath("");
+     var srvp2=Server.MapPath("");
+     
+     try{
+     photo = WebImage.GetImageFromRequest();
+     }
+     catch{}
+      if(photo != null){
+           
+             newFileName = Path.GetFileName(photo.FileName);
+             imagePath = @"Uploadimages\" + newFileName;
+             var pht=photo;
+             pht.Resize(height:267,width:425, preserveAspectRatio: true,
+            preventEnlarge: false);
+             pht.Save(@"~\" + imagePath);
+             Session["file2"]=@"~\" + imagePath;
+
+            imageThumbPath = @"imgThumb\" + newFileName;
+            photo.Resize(height:191,width: 285, preserveAspectRatio: true,
+            preventEnlarge: true);
+            photo.Save(@"~\" + imageThumbPath);        
+            
+             Session["file3"]=@"~\" + imageThumbPath;;
+
+            }
+     //if(Session["file1"]==""||Session["file2"]==""){
+         try{
+     var uploadedFile1 = Request.Files[0];
+     var  fileName1 = uploadedFile1.FileName;
+     srvp1=Server.MapPath("~/Uploadsofts/" +fileName1);
+     Session["file1"]= @"~/Uploadsofts/" +fileName1;
+      uploadedFile1.SaveAs(srvp1);
+
+     }
+     catch{}
+     
+     
+       if(name!=null&&name.Length>0){
+     
+        proddata data=new proddata();  
+       
+        
+       data.name= name;
+       data.price=price;
+       data.descrip= dec;
+       data.version=vers;
+       try{
+       data.prod =Session["file1"].ToString();
+       }
+       catch{
+            data.prod=tem.prod;
+       }
+       try{
+       data.img= Session["file2"].ToString();
+       }
+       catch{
+           data.img=tem.img;
+       }
+       try{
+       data.thumb=Session["file3"].ToString();
+       }
+       catch{
+           data.thumb=tem.thumb;
+       }
+
+       
+
+       if(DataBase.update(data)){
+        Response.Redirect("~/Admn_main"); 
+        }
+        }
+         
+  
+
+        
+
+ }
+
+}
+
+<p> UpLoad Software </p>
+ @FileUpload.GetHtml("Software",1,false,true,"Upload")
+
+<form action="" method="post" enctype="multipart/form-data">
+    <fieldset>
+        <br>
+      <p> UpLoad Image </p>
+      <input type="file" name="Image" />
+      <br/>
+      <input type="submit" value="Submit" />
+    </fieldset>
+  </form>
+
+<br><br><br>
+<form id="contact-form" method="post" enctype="multipart/form-data">
+    
+    <fieldset>
+       
+        <label><span class="text-form">Name:</span><input name="p1" type="text" value="@tem.name" /></label>
+        <label><span class="text-form">Version:</span><input name="p2" type="text" value=@tem.version /></label>
+       <label><span class="text-form">Price:</span><input name="p4" type="text" value=@tem.price/></label>
+        <div class="wrapper">
+            <div class="text-form">Description:</div>
+            <div class="extra-wrap">
+                <textarea name="p3">@tem.descrip</textarea>
+                <div class="clear"></div>
+                <div >
+                    <br>
+                    <a class="button" href="#" onclick="document.getElementById('contact-form').reset()">Clear</a>
+                    <a class="button" href="#" onclick="document.getElementById('contact-form').submit()">Edit</a>
+                </div>
+                
+            </div>
+        </div>
+       
+    </fieldset>
+        
+</form>
+
+

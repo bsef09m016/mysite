@@ -1,0 +1,138 @@
+﻿@{ 
+    Layout="/Shared/_LayoutMain.cshtml";
+}
+
+
+
+
+@{
+    
+
+try{     
+         
+     var v= Int32.Parse(Request["keyc"]);
+     if(v==-1){
+          Session["cart"]=new List<proddata>();
+     }
+     else{
+     List<proddata>car1=(List<proddata>)Session["cart"];
+    car1.RemoveAt(v);
+     Session["cart"]=new List<proddata>();
+    Session["cart"]=car1;
+    
+     } 
+     Response.Redirect("~/cart");
+   }
+   catch{}
+ 
+   //buy item
+   try{     
+         
+     var v= Int32.Parse(Request["keyb"]);
+     if(v==-1){
+          Session["buy"]=Session["cart"];
+         
+          List<proddata>car_1=(List<proddata>)Session["cart"];
+          int prc=0;
+          string items="";
+          for(int i=0;i<car_1.Count;i++)
+          {
+              try{
+          prc+=Int32.Parse( car_1[i].price);    
+          }
+          catch{}
+          items=items+","+car_1[i].name;
+          } 
+          Session["rup"]=prc.ToString();
+          Session["p"]=items;
+     }
+     else{
+     List<proddata>car1=(List<proddata>)Session["cart"];
+     proddata p=car1[v];
+     List<proddata>pp=new List<proddata>();
+     pp.Add(p);
+     Session["buy"]=pp;
+     Session["p"]=p.name;
+     Session["rup"]=p.price.ToString(); 
+     }
+      Session["eml"]=Request["ee"];
+      Response.Redirect("~/buy");
+   }
+   catch{}
+
+}
+
+@{
+
+List<proddata>car=(List<proddata>)Session["cart"];
+if(car!=null&&car.Count>0){
+    for(int i=0;i<car.Count;i++){
+        string str=car[i].thumb;
+str=str.Replace(@"\",@"/");
+str=str.Substring(2);
+
+var sm="cart.cshtml?keyc="+i.ToString();
+var sm2="cart.cshtml?keyb="+i.ToString();
+<form id="contact-form" method="post" enctype="multipart/form-data">
+ <fieldset>
+ <label><span class="text-form">Email Adress:</span><input name="ee" type="text" value="bsef09_1356955487_biz@gmail.com" /></label>
+</fieldset>
+    </form>
+<div class="ic"></div>
+					<div class="container_12">
+						<div class="wrapper indent-bot">
+							<article class="grid_12">
+								<div class="box">
+									<div class="padding">
+										<div class="wrapper">
+											<figure class="img-indent2"><img src= @str alt="_" /></figure>
+											<div class="extra-wrap">
+
+												 <table>
+                                                 <tr>
+                                                 <td><h6 class="p1">Name</h6></td><td><h6 class="p1">@car[i].name</h6></td>
+                                                 </tr>
+                                                 <tr>
+                                                 <td><h6 class="p1">Version</h6></td><td><h6 class="p1">@car[i].version</h6></td>
+                                                 </tr>
+                                                    <tr>
+                                                 <td><h6 class="p1">Price</h6></td><td><h6 class="p1">@car[i].price</h6></td>
+                                                 </tr>
+
+                                                 </table>
+                                                 
+												<div class="aligncenter">
+                                                
+                                                    <form id="contact-form1" method="post" enctype="multipart/form-data">
+                                                   
+													 <a class="button" href=@sm onclick="document.getElementById('contact-form1').submit()">Remove</a>
+                                                        <a class="button" href=@sm2 onclick="document.getElementById('contact-form1').submit()">: Buy :</a>
+												</form>
+                                                
+                                                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</article>
+						</div>
+</div>
+}
+
+var sm1="cart.cshtml?keyc=-1";
+var sm21="cart.cshtml?keyb=-1";
+ <form id="contact-form3" method="post" enctype="multipart/form-data">
+                                                   
+													 <a class="button" href=@sm1 onclick="document.getElementById('contact-form3').submit()">Remove ALL</a>
+                                                        <a class="button" href=@sm21 onclick="document.getElementById('contact-form3').submit()">: Buy ALL:</a>
+												</form>
+}
+else{
+    
+    //no item message
+
+
+
+}
+
+}
